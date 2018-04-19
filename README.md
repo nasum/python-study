@@ -15,3 +15,9 @@ direnvでactivate
 ```
 source .venv/bin/activate
 ```
+
+パッケージをインストール
+
+```zsh
+pip install -r packages.txt
+```
