@@ -1,5 +1,6 @@
 # ライフゲーム
 import subprocess
+import sys
 from time import sleep
 
 
@@ -65,24 +66,21 @@ def run(matrix):
             if next_live(matrix, x, y):
                 new_matrix[y][x] = 1
 
+    sys.stdout.write('\r\033[K')
+    sys.stdout.flush()
+
     # マトリックスを表示
     for line in new_matrix:
         for cell in line:
-            print('■', end="") if cell == 1 else print('□', end="")
+            sys.stdout.write("■") if cell == 1 else sys.stdout.write("□")
         print()
     sleep(0.5)
     run(new_matrix)
 
 
-"""
-matrix[y][x]
-x: 行
-y: 列
-"""
-matrix = [
-    [0, 0, 0],
-    [1, 1, 1],
-    [0, 0, 0]
-]
-
-run(matrix)
+# matrix = [
+#     [0, 0, 0],
+#     [1, 1, 1],
+#     [0, 0, 0]
+# ]
+# run(matrix)
