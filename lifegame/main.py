@@ -1,48 +1,77 @@
 # ライフゲーム
+import subprocess
+from time import sleep
 
 
-def born():
-    """
-    誕生
-    死んでいるセルに隣接する生きたセルがちょうど三つあれば、次の世代に生まれる
-    """
-    return True
+def living(matrix, x, y):
+    max_x = len(matrix[0])
+    max_y = len(matrix)
+
+    if x < 0:
+        return False
+    elif x >= max_x:
+        return False
+    elif y < 0:
+        return False
+    elif y >= max_y:
+        return False
+
+    if matrix[y][x] == 1:
+        return True
+    else:
+        return False
 
 
-def living():
-    """
-    生存
-    生きているセルに隣接する生きたセルが二つか三つなら、次の世代で生き残る
-    """
-    return True
+def next_live(matrix, x, y):
+    living_cell_count = 0
 
+    if living(matrix, x-1, y-1):
+        living_cell_count += 1
+    if living(matrix, x, y-1):
+        living_cell_count += 1
+    if living(matrix, x+1, y-1):
+        living_cell_count += 1
 
-def depopulation():
-    """
-    過疎
-    生きているセルに隣接する生きたセルが一つなら、死滅する
-    """
-    return True
+    if living(matrix, x-1, y):
+        living_cell_count += 1
+    if living(matrix, x+1, y):
+        living_cell_count += 1
 
+    if living(matrix, x-1, y+1):
+        living_cell_count += 1
+    if living(matrix, x, y+1):
+        living_cell_count += 1
+    if living(matrix, x+1, y+1):
+        living_cell_count += 1
 
-def overcrowding():
-    """
-    過密
-    生きているセルに隣接する生きたセルが4つ以上なら、死滅する
-    """
-    return True
-
-
-rules = (born, living, depopulation, overcrowding)
+    if living_cell_count == 3 and matrix[y][x] == 0:
+        return True
+    elif (living_cell_count == 2 or living_cell_count == 3) and matrix[y][x] == 1:
+        return True
+    elif living_cell_count <= 1 and matrix[y][x] == 1:
+        return False
+    elif living_cell_count >= 4 and matrix[y][x] == 1:
+        return False
 
 
 def run(matrix):
+    subprocess.call(['clear'])
+    # 新しいマトリックスを初期化
     new_matrix = [[0 for i in range(len(matrix[0]))]
                   for j in range(len(matrix))]
+
+    for y, line in enumerate(matrix):
+        for x, cell in enumerate(line):
+            if next_live(matrix, x, y):
+                new_matrix[y][x] = 1
+
+    # マトリックスを表示
     for line in new_matrix:
         for cell in line:
             print('■', end="") if cell == 1 else print('□', end="")
         print()
+    sleep(0.5)
+    run(new_matrix)
 
 
 """
